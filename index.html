@@ -16,12 +16,10 @@
   <style>
     :root {
       --gold: #d4af37;
-      --gold-dark: #b88628;
       --panel-bg: #1e1e24;
       --dark-bg: #121216;
       --input-bg: #16161c;
       --border-color: #343444;
-      --whatsapp-green: #25D366;
     }
 
     * { box-sizing: border-box; }
@@ -200,7 +198,7 @@
       gap: 6px;
     }
 
-    /* PREVIEW CONTAINER (FIXES MOBILE SQUISHING) */
+    /* PREVIEW CONTAINER */
     .preview-panel {
       display: flex;
       flex-direction: column;
@@ -223,7 +221,7 @@
       transform-origin: top left;
     }
 
-    /* POSTER CANVAS (LOCKED TO 1200x675 HD 16:9 RATIO) */
+    /* POSTER CANVAS (LOCKED TO 1200x675 HD) */
     #poster-canvas {
       width: 1200px;
       height: 675px;
@@ -266,7 +264,7 @@
       padding: 26px 44px 0 44px;
     }
 
-    /* TOP HEADER: Non-wrapping, solid alignment */
+    /* TOP HEADER */
     .top-header-row {
       display: flex;
       justify-content: space-between;
@@ -316,28 +314,19 @@
       background: #8b3a12;
     }
 
-    /* Top Right Pod */
-    .top-right-pod {
-      display: flex;
-      align-items: stretch;
-      gap: 14px;
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(6px);
-      border: 1px solid rgba(255, 255, 255, 0.95);
-      border-radius: 8px;
-      padding: 6px 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
-      max-width: 480px;
-      flex-shrink: 0;
-    }
-    .date-column {
+    /* Date Only Pod */
+    .date-only-pod {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      border-right: 1.5px dashed #c09060;
-      padding-right: 12px;
-      min-width: 120px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      border-radius: 8px;
+      padding: 8px 18px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      flex-shrink: 0;
       white-space: nowrap;
     }
     .date-top-pill {
@@ -359,18 +348,8 @@
       line-height: 1;
       white-space: nowrap;
     }
-    .side-thought-text {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      font-size: 0.95rem;
-      line-height: 1.35;
-      color: #24140b;
-      font-weight: 700;
-      white-space: pre-line;
-    }
 
-    /* CENTER SCRIPTURE: Large, Bold Telugu typography */
+    /* CENTER SCRIPTURE */
     .scripture-main-area {
       max-width: 620px;
       margin-top: -10px;
@@ -400,6 +379,8 @@
       margin-bottom: 12px;
       white-space: nowrap;
     }
+    
+    /* Fixed Reference Pill */
     .scripture-ref-pill {
       display: inline-flex;
       align-items: center;
@@ -425,7 +406,7 @@
       line-height: 1.45;
       color: #1e1e1e;
       font-weight: 600;
-      max-width: 550px;
+      max-width: 580px;
       white-space: pre-line;
       box-shadow: 0 3px 10px rgba(0,0,0,0.06);
     }
@@ -539,7 +520,6 @@
     <div class="controls-panel" id="controlsPanel">
 
       <div class="section-title">1. Background Photo</div>
-      <label>Choose from 10 Presets:</label>
       <div class="bg-grid">
         <div class="bg-thumb active" style="background-image: url('https://images.unsplash.com/photo-1509021436665-8f07dbf5bf1d?auto=format&fit=crop&w=1200&q=80');" onclick="pickBg(this)"></div>
         <div class="bg-thumb" style="background-image: url('https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?auto=format&fit=crop&w=1200&q=80');" onclick="pickBg(this)"></div>
@@ -597,13 +577,6 @@
 Commit your way to the LORD; trust in him, and he will act.</textarea>
       </div>
 
-      <div class="form-group">
-        <label>Top-Right Inspirational Note:</label>
-        <textarea id="sideNoteInput">ఆయన నీ జీవితానికి మంచి మార్గమును సిద్ధం చేస్తున్నాడు.
-
-He is preparing the best path for your life.</textarea>
-      </div>
-
       <div class="section-title">4. Church Details</div>
       <div class="form-group">
         <label>Upload Church Logo:</label>
@@ -632,7 +605,7 @@ He is preparing the best path for your life.</textarea>
       </div>
     </div>
 
-    <!-- RIGHT PREVIEW PANEL (AUTO-SCALES CRISPLY ON ANY SCREEN) -->
+    <!-- RIGHT PREVIEW PANEL -->
     <div class="preview-panel" id="previewPanel">
       <div class="preview-viewport-outer">
         <div id="viewportWrap">
@@ -653,15 +626,10 @@ He is preparing the best path for your life.</textarea>
                   </div>
                 </div>
 
-                <!-- Date & Thought Pod -->
-                <div class="top-right-pod">
-                  <div class="date-column">
-                    <span class="date-top-pill" id="viewDate">19 SEP 2026</span>
-                    <span class="date-script-day" id="viewDay">Saturday</span>
-                  </div>
-                  <div class="side-thought-text" id="viewSideNote">ఆయన నీ జీవితానికి మంచి మార్గమును సిద్ధం చేస్తున్నాడు.
-
-He is preparing the best path for your life.</div>
+                <!-- Date Only Pod -->
+                <div class="date-only-pod">
+                  <span class="date-top-pill" id="viewDate">19 SEP 2026</span>
+                  <span class="date-script-day" id="viewDay">Saturday</span>
                 </div>
               </div>
 
@@ -672,8 +640,9 @@ He is preparing the best path for your life.</div>
                 <div class="verse-second-line" id="viewVerse2">ఆయన నీకు తోడుగా ఉండును.</div>
 
                 <div class="scripture-ref-pill">
-                  <span>📖</span>
+                  <span>✦</span>
                   <span id="viewRef">కీర్తనలు 37:5 | PSALMS 37:5</span>
+                  <span>✦</span>
                 </div>
 
                 <div class="full-verse-card" id="viewFullVerse">నీ మార్గమును యెహోవాకు అప్పగించు; ఆయన నమ్మకము ఉంచుము; ఆయన చేయును.
@@ -726,7 +695,6 @@ Commit your way to the LORD; trust in him, and he will act.</div>
       { input: 'verse2Input', target: 'viewVerse2' },
       { input: 'refInput', target: 'viewRef' },
       { input: 'fullVerseInput', target: 'viewFullVerse' },
-      { input: 'sideNoteInput', target: 'viewSideNote' },
       { input: 'churchNameInput', target: 'viewChurchName' },
       { input: 'churchLocInput', target: 'viewLoc' },
       { input: 'contactInput', target: 'viewContact' }
@@ -782,7 +750,7 @@ Commit your way to the LORD; trust in him, and he will act.</div>
       }
     });
 
-    // 6. Mobile Auto Scaler (Fixes squishing completely)
+    // 6. Mobile Auto Scaler
     function autoScalePreview() {
       const wrap = document.getElementById('viewportWrap');
       const container = document.querySelector('.preview-viewport-outer');
@@ -794,7 +762,6 @@ Commit your way to the LORD; trust in him, and he will act.</div>
       const scale = Math.min(1, screenWidth / baseWidth);
       wrap.style.transform = `scale(${scale})`;
       
-      // Keep outer bounding box exactly equal to scaled height
       container.style.height = `${baseHeight * scale}px`;
       wrap.style.marginRight = `${-(baseWidth - baseWidth * scale)}px`;
       wrap.style.marginBottom = `${-(baseHeight - baseHeight * scale)}px`;
@@ -823,19 +790,18 @@ Commit your way to the LORD; trust in him, and he will act.</div>
       }
     }
 
-    // 8. Generate High-Res 1200x675 Image Blob
+    // 8. Generate High-Res Image
     async function getCanvasBlob() {
       const canvasArea = document.getElementById('poster-canvas');
       const wrap = document.getElementById('viewportWrap');
       
-      // Temporarily clear transformation so html2canvas renders true HD 1200x675
       const savedTransform = wrap.style.transform;
       wrap.style.transform = 'none';
 
       const canvas = await html2canvas(canvasArea, {
         width: 1200,
         height: 675,
-        scale: 2, // 2400x1350 crystal clear output
+        scale: 2, 
         useCORS: true,
         allowTaint: true
       });
@@ -857,26 +823,31 @@ Commit your way to the LORD; trust in him, and he will act.</div>
       a.click();
     }
 
-    // 10. WhatsApp One-Click Direct Sharing
+    // 10. WhatsApp One-Click Share
     async function shareToWhatsApp() {
       const blob = await getCanvasBlob();
       const dateStr = document.getElementById('viewDate').innerText.replace(/\s+/g, '_');
       const file = new File([blob], `Church_Daily_Verse_${dateStr}.png`, { type: 'image/png' });
+      
+      const headingText = document.getElementById('viewHeader').innerText;
+      const fullVerseText = document.getElementById('viewFullVerse').innerText;
+      const refText = document.getElementById('viewRef').innerText;
+      
+      const whatsappMessage = `*${headingText}*\n\n${fullVerseText}\n\n_${refText}_`;
 
       if (navigator.canShare && navigator.canShare({ files: [file] })) {
         try {
           await navigator.share({
             files: [file],
             title: 'Daily Scripture Verse',
-            text: `${document.getElementById('viewVerse1').innerText} ${document.getElementById('viewHighlight').innerText}\n${document.getElementById('viewRef').innerText}`
+            text: whatsappMessage
           });
         } catch (err) {
-          // Share dialog dismissed
         }
       } else {
         downloadPoster();
-        const text = encodeURIComponent(`*${document.getElementById('viewVerse1').innerText} ${document.getElementById('viewHighlight').innerText}*\n${document.getElementById('viewRef').innerText}`);
-        window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+        const encodedText = encodeURIComponent(whatsappMessage);
+        window.open(`https://api.whatsapp.com/send?text=${encodedText}`, '_blank');
       }
     }
   </script>

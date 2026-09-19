@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Daily Church Scripture Poster Creator</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;800;900&family=Great+Vibes&family=Inter:wght@400;500;600;700&family=Ramabhadra&display=swap" rel="stylesheet">
+  
+  <!-- html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    :root {
+      --gold: #d4af37;
+      --gold-dark: #b88628;
+      --panel-bg: #1e1e24;
+      --dark-bg: #121216;
+      --input-bg: #16161c;
+      --border-color: #343444;
+      --whatsapp-green: #25D366;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 16px;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--dark-bg);
+      color: #f0f0f5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+    header h1 {
+      margin: 0;
+      color: var(--gold);
+      font-size: 1.6rem;
+      letter-spacing: 0.5px;
+    }
+    header p {
+      margin: 4px 0 0;
+      color: #9898aa;
+      font-size: 0.9rem;
+    }
+
+    /* Mobile Segmented View Toggle */
+    .mobile-tab-bar {
+      display: none;
+      width: 100%;
+      max-width: 480px;
+      margin-bottom: 16px;
+      background: #252530;
+      border-radius: 8px;
+      padding: 4px;
+      gap: 6px;
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      background: transparent;
+      color: #aaa;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .tab-btn.active {
+      background: var(--gold);
+      color: #121216;
+    }
+
+    .main-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 25px;
+      justify-content: center;
+      max-width: 1600px;
+      width: 100%;
+    }
+
+    /* Left Input Controls */
+    .controls-panel {
+      background: var(--panel-bg);
+      padding: 20px;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 480px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      height: fit-content;
+    }
+
+    .section-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin: 18px 0 10px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .section-title:first-child { margin-top: 0; }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #c9c9dc;
+    }
+    input[type="text"], input[type="date"], textarea {
+      width: 100%;
+      padding: 11px 12px;
+      background: var(--input-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      color: #fff;
+      font-size: 0.95rem;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+    }
+    textarea {
+      resize: vertical;
+      min-height: 55px;
+    }
+
+    /* 10 HD Background Presets */
+    .bg-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+    .bg-thumb {
+      height: 46px;
+      border-radius: 5px;
+      border: 2px solid transparent;
+      cursor: pointer;
+      background-size: cover;
+      background-position: center;
+      transition: transform 0.15s, border-color 0.15s;
+    }
+    .bg-thumb:hover, .bg-thumb.active {
+      border-color: var(--gold);
+      transform: scale(1.05);
+    }
+
+    /* Action Buttons */
+    .action-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .btn-share {
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: #fff;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.15s;
+    }
+    .btn-download {
+      background: linear-gradient(135deg, #dfb259, #b88628);
+      color: #120802;
+      border: none;
+      padding: 14px;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.15s;
+    }
+    .btn-share:hover, .btn-download:hover {
+      transform: translateY(-2px);
+    }
+
+    /* PREVIEW CONTAINER */
+    .preview-panel {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 1050px;
+    }
+
+    .preview-viewport {
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* POSTER CANVAS (Exact 1050 x 590 px - Standard 16:9 Banner) */
+    #poster-canvas {
+      width: 1050px;
+      height: 590px;
+      position: relative;
+      background-size: cover;
+      background-position: center right;
+      background-repeat: no-repeat;
+      overflow: hidden;
+      box-shadow: 0 16px 45px rgba(0,0,0,0.6);
+      font-family: 'Ramabhadra', sans-serif;
+      user-select: none;
+      transform-origin: top center;
+    }
+
+    /* Natural light gradient mask (keeps right silhouette clear) */
+    .canvas-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, 
+        rgba(255, 255, 255, 0.98) 0%, 
+        rgba(255, 255, 255, 0.93) 44%, 
+        rgba(255, 255, 255, 0.55) 62%, 
+        rgba(255, 255, 255, 0.05) 85%, 
+        transparent 100%);
+      z-index: 1;
+    }
+
+    .canvas-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 24px 38px 0 38px;
+    }
+
+    /* TOP HEADER: Non-overlapping layout */
+    .top-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 15px;
+    }
+
+    .title-group {
+      display: flex;
+      flex-direction: column;
+    }
+    .title-badge-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .promise-badge {
+      background: #841818;
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 800;
+      padding: 4px 14px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .top-heading-text {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: #1a1a1a;
+      letter-spacing: 0.5px;
+    }
+    .title-divider {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 4px;
+    }
+    .title-divider span {
+      display: inline-block;
+      height: 2px;
+      width: 45px;
+      background: #8b3a12;
+    }
+
+    /* Top Right Pod: Date & Thought together */
+    .top-right-pod {
+      display: flex;
+      align-items: stretch;
+      gap: 14px;
+      background: rgba(255, 255, 255, 0.82);
+      backdrop-filter: blur(6px);
+      border: 1px solid rgba(255, 255, 255, 0.95);
+      border-radius: 8px;
+      padding: 6px 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      max-width: 440px;
+    }
+    .date-column {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border-right: 1.5px dashed #c09060;
+      padding-right: 12px;
+      min-width: 110px;
+    }
+    .date-top-pill {
+      background: #841818;
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 3px 12px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .date-script-day {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.6rem;
+      color: #2b170c;
+      margin-top: 2px;
+      line-height: 1;
+    }
+    .side-thought-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      font-size: 0.86rem;
+      line-height: 1.35;
+      color: #24140b;
+      font-weight: 700;
+      white-space: pre-line;
+    }
+
+    /* CENTER SCRIPTURE: Large, prominent typography */
+    .scripture-main-area {
+      max-width: 550px;
+      margin-top: -10px;
+    }
+    .verse-first-line {
+      font-size: 2.25rem;
+      color: #111;
+      font-weight: 900;
+      line-height: 1.25;
+    }
+    .verse-huge-highlight {
+      font-size: 4rem;
+      font-weight: 900;
+      color: #9d1c16;
+      line-height: 1.05;
+      display: inline-block;
+      margin: 4px 0 6px;
+      text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.9);
+      letter-spacing: 0.5px;
+    }
+    .verse-second-line {
+      font-size: 1.55rem;
+      color: #222;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .scripture-ref-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: linear-gradient(135deg, #1c1008, #2a180e);
+      color: #f7dfa4;
+      padding: 6px 20px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      border: 1.5px solid #d4a754;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+      margin-bottom: 10px;
+    }
+    .full-verse-card {
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(4px);
+      border-left: 4px solid #8b3a12;
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      font-size: 0.96rem;
+      line-height: 1.45;
+      color: #1e1e1e;
+      font-weight: 600;
+      max-width: 500px;
+      white-space: pre-line;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+    }
+
+    /* BOTTOM CHURCH RIBBON */
+    .church-footer-ribbon {
+      margin-left: -38px;
+      margin-right: -38px;
+      background: linear-gradient(90deg, #170a04 0%, #110602 100%);
+      border-top: 3px solid var(--gold);
+      color: #fff;
+    }
+    .church-main-row {
+      padding: 10px 38px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .church-brand-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .church-shield-logo {
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #2b1307;
+      font-size: 1.7rem;
+      color: var(--gold);
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .church-shield-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .church-title-col {
+      display: flex;
+      flex-direction: column;
+    }
+    .church-name-display {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #f7da8b;
+      letter-spacing: 1.6px;
+    }
+    .church-location-display {
+      font-size: 0.85rem;
+      letter-spacing: 2px;
+      color: #e5e5e5;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: 600;
+    }
+    .footer-blessing-text {
+      font-size: 0.95rem;
+      text-align: right;
+      color: #e5be7a;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+    .contact-sub-strip {
+      background: #090301;
+      border-top: 1px solid rgba(212, 175, 55, 0.22);
+      padding: 5px 38px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: #c4c1b7;
+      letter-spacing: 0.5px;
+    }
+
+    /* Mobile Adaptations */
+    @media (max-width: 900px) {
+      body { padding: 12px; }
+      .mobile-tab-bar { display: flex; }
+      .controls-panel.hide-on-mobile { display: none; }
+      .preview-panel.hide-on-mobile { display: none; }
+      .action-group { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>✝ Daily Scripture Poster Creator</h1>
+    <p>Create beautiful morning scripture posters with zero design effort.</p>
+  </header>
+
+  <!-- Mobile Segmented Tabs -->
+  <div class="mobile-tab-bar">
+    <button class="tab-btn active" onclick="switchTab('edit')">✏️ Edit Verse & Settings</button>
+    <button class="tab-btn" onclick="switchTab('preview')">👁️ Live Poster Preview</button>
+  </div>
+
+  <div class="main-layout">
+    
+    <!-- LEFT CONTROLS (Form labels entirely in English) -->
+    <div class="controls-panel" id="controlsPanel">
+
+      <div class="section-title">1. Background Photo</div>
+      <label>Choose from 10 Presets:</label>
+      <div class="bg-grid">
+        <div class="bg-thumb active" style="background-image: url('https://images.unsplash.com/photo-1509021436665-8f07dbf5bf1d?auto=format&fit=crop&w=1200&q=80');" onclick="pickBg(this)"></div>
+        <div class="bg-thumb" style="background-image: url('https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?auto=format&fit=crop&w=1200&q=80');" onclick="pickBg(this)"></div>
+        <div class="bg-thumb" style="background-image: url('https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&w=1200&q=80');" onclick="pickBg(this)"></div>
+        <div class="bg-thumb" style="background-image: url('https://images.unsplash.com/photo-1518495973542-4542c06a5843?auto=format&fit=crop&w=1200&q=80');" onclick="pickBg(this)"></div>
+        <div class="bg-thumb" style="background-image: url('https://images.unsplash.com/photo-1543783207-ec64e4d95325?auto=format&fit=crop&w=1200&q=80');" onclick="pickBg(this)"></div>
+        <div class="bg-thumb" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1200&q=80');" onclick="pickBg(this)"></div>
+        <div class="bg-thumb" style="background-image: url('https://images.unsplash.com/photo-1499209974431-9dddcece7f88?auto=format&fit=crop&w=1200&q=80');" onclick="pickBg(this)"></div>
+        <div class="bg-thumb" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1200&q=80');" onclick="pickBg(this)"></div>
+        <div class="bg-thumb" style="background-image: url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=80');" onclick="pickBg(this)"></div>
+        <div class="bg-thumb" style="background-image: url('https://images.unsplash.com/photo-1548625361-195981a57c50?auto=format&fit=crop&w=1200&q=80');" onclick="pickBg(this)"></div>
+      </div>
+
+      <div class="form-group">
+        <label>Or Upload Custom Photo:</label>
+        <input type="file" id="bgUpload" accept="image/*" />
+      </div>
+
+      <div class="section-title">2. Date & Title</div>
+      <div class="form-group">
+        <label>Poster Date:</label>
+        <input type="date" id="dateInput" />
+      </div>
+
+      <div class="form-group">
+        <label>Badge & Top Heading:</label>
+        <input type="text" id="badgeInput" value="వాగ్దానము" style="margin-bottom: 6px;" />
+        <input type="text" id="headerInput" value="ఈరోజు దేవుని వాక్యం" />
+      </div>
+
+      <div class="section-title">3. Scripture Text</div>
+      <div class="form-group">
+        <label>Verse First Line:</label>
+        <input type="text" id="verse1Input" value="నీ మార్గమును యెహోవాకు" />
+      </div>
+
+      <div class="form-group">
+        <label>Highlighted Main Word:</label>
+        <input type="text" id="highlightInput" value="అప్పగించు," />
+      </div>
+
+      <div class="form-group">
+        <label>Verse Second Line:</label>
+        <input type="text" id="verse2Input" value="ఆయన నీకు తోడుగా ఉండును." />
+      </div>
+
+      <div class="form-group">
+        <label>Bible Reference:</label>
+        <input type="text" id="refInput" value="కీర్తనలు 37:5 | PSALMS 37:5" />
+      </div>
+
+      <div class="form-group">
+        <label>Full Scripture Quote:</label>
+        <textarea id="fullVerseInput">నీ మార్గమును యెహోవాకు అప్పగించు; ఆయన నమ్మకము ఉంచుము; ఆయన చేయును.
+Commit your way to the LORD; trust in him, and he will act.</textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Top-Right Inspirational Note:</label>
+        <textarea id="sideNoteInput">ఆయన నీ జీవితానికి మంచి మార్గమును సిద్ధం చేస్తున్నాడు.
+
+He is preparing the best path for your life.</textarea>
+      </div>
+
+      <div class="section-title">4. Church Details</div>
+      <div class="form-group">
+        <label>Upload Church Logo:</label>
+        <input type="file" id="logoUpload" accept="image/*" />
+      </div>
+
+      <div class="form-group">
+        <label>Church Name & Location:</label>
+        <input type="text" id="churchNameInput" value="MOUNT ZION GOSPEL CHURCH" style="margin-bottom: 6px;" />
+        <input type="text" id="churchLocInput" value="MANNEGUDA" />
+      </div>
+
+      <div class="form-group">
+        <label>Bottom Contact Strip:</label>
+        <input type="text" id="contactInput" value="Pastor: Rev. John | 📞 +91 98765 43210 | 🌐 youtube.com/MountZion" />
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-group">
+        <button class="btn-share" onclick="shareToWhatsApp()">
+          <span>💬</span> Share to WhatsApp
+        </button>
+        <button class="btn-download" onclick="downloadPoster()">
+          <span>📥</span> Download Poster
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT PREVIEW CANVAS -->
+    <div class="preview-panel" id="previewPanel">
+      <div class="preview-viewport" id="viewportWrap">
+        
+        <div id="poster-canvas" style="background-image: url('https://images.unsplash.com/photo-1509021436665-8f07dbf5bf1d?auto=format&fit=crop&w=1200&q=80');">
+          <div class="canvas-overlay"></div>
+
+          <div class="canvas-content">
+            <!-- TOP ROW -->
+            <div class="top-header-row">
+              <div class="title-group">
+                <div class="title-badge-wrap">
+                  <span class="promise-badge" id="viewBadge">వాగ్దానము</span>
+                  <span class="top-heading-text" id="viewHeader">ఈరోజు దేవుని వాక్యం</span>
+                </div>
+                <div class="title-divider">
+                  <span></span> ✦ <span></span>
+                </div>
+              </div>
+
+              <!-- Date & Thought Pod -->
+              <div class="top-right-pod">
+                <div class="date-column">
+                  <span class="date-top-pill" id="viewDate">19 SEP 2026</span>
+                  <span class="date-script-day" id="viewDay">Saturday</span>
+                </div>
+                <div class="side-thought-text" id="viewSideNote">ఆయన నీ జీవితానికి మంచి మార్గమును సిద్ధం చేస్తున్నాడు.
+
+He is preparing the best path for your life.</div>
+              </div>
+            </div>
+
+            <!-- CENTER SCRIPTURE -->
+            <div class="scripture-main-area">
+              <div class="verse-first-line" id="viewVerse1">నీ మార్గమును యెహోవాకు</div>
+              <div class="verse-huge-highlight" id="viewHighlight">అప్పగించు,</div>
+              <div class="verse-second-line" id="viewVerse2">ఆయన నీకు తోడుగా ఉండును.</div>
+
+              <div class="scripture-ref-pill">
+                <span>📖</span>
+                <span id="viewRef">కీర్తనలు 37:5 | PSALMS 37:5</span>
+              </div>
+
+              <div class="full-verse-card" id="viewFullVerse">నీ మార్గమును యెహోవాకు అప్పగించు; ఆయన నమ్మకము ఉంచుము; ఆయన చేయును.
+Commit your way to the LORD; trust in him, and he will act.</div>
+            </div>
+
+            <!-- BOTTOM CHURCH RIBBON -->
+            <div class="church-footer-ribbon">
+              <div class="church-main-row">
+                <div class="church-brand-group">
+                  <div class="church-shield-logo" id="viewLogo">✝</div>
+                  <div class="church-title-col">
+                    <span class="church-name-display" id="viewChurchName">MOUNT ZION GOSPEL CHURCH</span>
+                    <span class="church-location-display">📍 <span id="viewLoc">MANNEGUDA</span></span>
+                  </div>
+                </div>
+
+                <div class="footer-blessing-text">
+                  నమ్మకము ఉంచుము<br>
+                  <strong>దేవుడు నిన్ను నడిపించును.</strong>
+                </div>
+              </div>
+
+              <div class="contact-sub-strip" id="viewContact">
+                Pastor: Rev. John | 📞 +91 98765 43210 | 🌐 youtube.com/MountZion
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // 1. Initialize Date
+    const today = new Date();
+    document.getElementById('dateInput').valueAsDate = today;
+    renderDate(today);
+
+    // 2. Real-time Text Input Binding
+    const bindings = [
+      { input: 'badgeInput', target: 'viewBadge' },
+      { input: 'headerInput', target: 'viewHeader' },
+      { input: 'verse1Input', target: 'viewVerse1' },
+      { input: 'highlightInput', target: 'viewHighlight' },
+      { input: 'verse2Input', target: 'viewVerse2' },
+      { input: 'refInput', target: 'viewRef' },
+      { input: 'fullVerseInput', target: 'viewFullVerse' },
+      { input: 'sideNoteInput', target: 'viewSideNote' },
+      { input: 'churchNameInput', target: 'viewChurchName' },
+      { input: 'churchLocInput', target: 'viewLoc' },
+      { input: 'contactInput', target: 'viewContact' }
+    ];
+
+    bindings.forEach(item => {
+      document.getElementById(item.input).addEventListener('input', (e) => {
+        document.getElementById(item.target).innerText = e.target.value;
+      });
+    });
+
+    document.getElementById('dateInput').addEventListener('change', (e) => {
+      const d = new Date(e.target.value);
+      if (!isNaN(d.getTime())) renderDate(d);
+    });
+
+    function renderDate(d) {
+      const months = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+      document.getElementById('viewDate').innerText = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+      document.getElementById('viewDay').innerText = days[d.getDay()];
+    }
+
+    // 3. Preset Background Picker
+    function pickBg(el) {
+      document.querySelectorAll('.bg-thumb').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('poster-canvas').style.backgroundImage = el.style.backgroundImage;
+    }
+
+    // 4. Custom Background Upload
+    document.getElementById('bgUpload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          document.getElementById('poster-canvas').style.backgroundImage = `url('${evt.target.result}')`;
+          document.querySelectorAll('.bg-thumb').forEach(t => t.classList.remove('active'));
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // 5. Custom Logo Upload
+    document.getElementById('logoUpload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          document.getElementById('viewLogo').innerHTML = `<img src="${evt.target.result}" alt="Logo" />`;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // 6. Mobile Auto Scaler for 16:9 Canvas
+    function autoScalePreview() {
+      const canvas = document.getElementById('poster-canvas');
+      const viewport = document.getElementById('viewportWrap');
+      const availableWidth = viewport.clientWidth;
+
+      if (availableWidth < 1050) {
+        const scale = availableWidth / 1050;
+        canvas.style.transform = `scale(${scale})`;
+        viewport.style.height = `${590 * scale}px`;
+      } else {
+        canvas.style.transform = 'none';
+        viewport.style.height = 'auto';
+      }
+    }
+    window.addEventListener('resize', autoScalePreview);
+    window.addEventListener('DOMContentLoaded', autoScalePreview);
+
+    // 7. Mobile Tab Switcher
+    function switchTab(tab) {
+      const controls = document.getElementById('controlsPanel');
+      const preview = document.getElementById('previewPanel');
+      const buttons = document.querySelectorAll('.tab-btn');
+
+      if (tab === 'edit') {
+        controls.classList.remove('hide-on-mobile');
+        preview.classList.add('hide-on-mobile');
+        buttons[0].classList.add('active');
+        buttons[1].classList.remove('active');
+      } else {
+        controls.classList.add('hide-on-mobile');
+        preview.classList.remove('hide-on-mobile');
+        buttons[0].classList.remove('active');
+        buttons[1].classList.add('active');
+        autoScalePreview();
+      }
+    }
+
+    // 8. Generate High-Res Image Blob
+    async function getCanvasBlob() {
+      const canvasArea = document.getElementById('poster-canvas');
+      // Temporarily remove transform to render high-res
+      const currentTransform = canvasArea.style.transform;
+      canvasArea.style.transform = 'none';
+
+      const canvas = await html2canvas(canvasArea, {
+        scale: 2.5, // 2625px crisp output
+        useCORS: true,
+        allowTaint: true
+      });
+
+      canvasArea.style.transform = currentTransform;
+
+      return new Promise(resolve => {
+        canvas.toBlob(resolve, 'image/png');
+      });
+    }
+
+    // 9. Download Poster
+    async function downloadPoster() {
+      const blob = await getCanvasBlob();
+      const a = document.createElement('a');
+      const dateStr = document.getElementById('viewDate').innerText.replace(/\s+/g, '_');
+      a.download = `Church_Daily_Verse_${dateStr}.png`;
+      a.href = URL.createObjectURL(blob);
+      a.click();
+    }
+
+    // 10. WhatsApp One-Click Direct Sharing
+    async function shareToWhatsApp() {
+      const blob = await getCanvasBlob();
+      const dateStr = document.getElementById('viewDate').innerText.replace(/\s+/g, '_');
+      const file = new File([blob], `Church_Daily_Verse_${dateStr}.png`, { type: 'image/png' });
+
+      // If mobile browser supports direct file sharing (Web Share API)
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: 'Daily Scripture Verse',
+            text: `${document.getElementById('viewVerse1').innerText} ${document.getElementById('viewHighlight').innerText}\n${document.getElementById('viewRef').innerText}`
+          });
+        } catch (err) {
+          // User dismissed share dialog
+        }
+      } else {
+        // Fallback: Download image and open WhatsApp Web
+        downloadPoster();
+        const text = encodeURIComponent(`*${document.getElementById('viewVerse1').innerText} ${document.getElementById('viewHighlight').innerText}*\n${document.getElementById('viewRef').innerText}`);
+        window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+      }
+    }
+  </script>
+</body>
+</html>
